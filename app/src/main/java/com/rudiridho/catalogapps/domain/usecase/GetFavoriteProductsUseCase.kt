@@ -1,0 +1,11 @@
+package com.rudiridho.catalogapps.domain.usecase
+
+import com.rudiridho.catalogapps.domain.model.ProductDomain
+import com.rudiridho.catalogapps.domain.repository.ProductRepository
+import com.rudiridho.catalogapps.utils.DomainResult
+import kotlinx.coroutines.flow.Flow
+
+class GetFavoriteProductsUseCase(private val productRepository: ProductRepository) {
+    suspend operator fun invoke(): Flow<DomainResult<List<ProductDomain>>> =
+        productRepository.getFavoriteProducts()
+}

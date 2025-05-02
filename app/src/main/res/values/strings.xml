@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Catalog Apps</string>
+
+    <!--Error and Empty State Messages -->
+    <string name="error_connection">No internet connection</string>
+    <string name="error_state_message">Oops! Something went wrong.</string>
+    <string name="empty_state_message">No products found.</string>
+    <string name="retry">Retry</string>
+
+    <!-- Filter Button -->
+    <string name="all">All</string>
+    <string name="favorites">Favorites</string>
+</resources>
