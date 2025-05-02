@@ -8,9 +8,10 @@
 
     <ImageView
         android:id="@+id/errorImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/error_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/error_icon"
         app:tint="@color/red" />
 
     <TextView
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/error_state_message"
-        android:textColor="@color/red"
+        android:textColor="@color/grey"
         android:textSize="18sp" />
 
     <Button

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rudiridho.catalogapps.R
 import com.rudiridho.catalogapps.databinding.FragmentProductListBinding
 import com.rudiridho.catalogapps.presentation.adapter.ProductAdapter
@@ -22,6 +23,7 @@ class ProductListFragment : Fragment() {
     private val binding get() = _binding!!
     private val productViewModel: ProductViewModel by viewModel()
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +36,14 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        swipeRefreshLayout = binding.swipeRefreshLayout
+
         setupRecyclerView()
         observeViewModel()
         setupSearchView()
         setupFilterButtons()
+        setupRetryButton()
+        setupSwipeToRefresh()
     }
 
     private fun setupRecyclerView() {
@@ -52,76 +58,40 @@ class ProductListFragment : Fragment() {
 
     private fun observeViewModel() {
         productViewModel.products.observe(viewLifecycleOwner) { uiSafeState ->
-            when (uiSafeState) {
-                is UiSafeState.Success -> {
-                    // Submit the list of ProductUI to the adapter
-                    productAdapter.submitList(uiSafeState.data)
-                    Log.d("edosak", "product ${uiSafeState.data}")
-                }
-                is UiSafeState.Loading -> {
-                    // Handle loading state (e.g., show a progress bar)
-                }
-                is UiSafeState.Error -> {
-                    // Handle error state (e.g., showan error message)
-                }
-                is UiSafeState.ErrorConnection -> {
-                    // Handle error connection state
-                }
-                is UiSafeState.Empty -> {
-                    // Handle empty state
-                }
-                else -> {
-                    // Handle uninitialized state
-                }
-            }
+            handleUiSafeState(uiSafeState)
         }
 
         productViewModel.favoriteProducts.observe(viewLifecycleOwner) { uiSafeState ->
-            when (uiSafeState) {
-                is UiSafeState.Success -> {
-                    productAdapter.submitList(uiSafeState.data)
-                    Log.d("edosak", "fav product ${uiSafeState.data}")
-                }
-                is UiSafeState.Loading -> {
-                    // Handle loading state
-                }
-                is UiSafeState.Error -> {
-                    // Handle error state
-                }
-                is UiSafeState.ErrorConnection -> {
-                    // Handle error connection state
-                }
-                is UiSafeState.Empty -> {
-                    // Handle empty state
-                }
-                else -> {
-                    // Handle uninitialized state
-                }
-            }
+            handleUiSafeState(uiSafeState)
         }
 
         productViewModel.searchedProducts.observe(viewLifecycleOwner) { uiSafeState ->
-            when (uiSafeState) {
-                is UiSafeState.Success -> {
-                    showProductList(uiSafeState.data)
-                }
-                is UiSafeState.Loading -> {
-                    showLoading()
-                }
-                is UiSafeState.Error -> {
-                    showError(uiSafeState.message)
-                }
-                is UiSafeState.ErrorConnection -> {
-                    showError(getString(R.string.error_connection))
-                }
-                is UiSafeState.Empty -> {
-                    showEmptyState()
-                }
-                else -> {
-                    // Handle uninitialized state
-                }
+            handleUiSafeState(uiSafeState)
+        }
+    }
+
+    private fun handleUiSafeState(uiSafeState: UiSafeState<List<ProductUI>>) {
+        when (uiSafeState) {
+            is UiSafeState.Success -> {
+                showProductList(uiSafeState.data)
+            }
+            is UiSafeState.Loading -> {
+                showLoading()
+            }
+            is UiSafeState.Error -> {
+                showError(uiSafeState.message)
+            }
+            is UiSafeState.ErrorConnection -> {
+                showError(getString(R.string.error_connection))
+            }
+            is UiSafeState.Empty -> {
+                showEmptyState()
+            }
+            else -> {
+                // Handle uninitialized state if needed
             }
         }
+        swipeRefreshLayout.isRefreshing = false
     }
 
     private fun setupSearchView() {
@@ -146,6 +116,12 @@ class ProductListFragment : Fragment() {
 
         binding.btnFavorites.setOnClickListener {
             productViewModel.getFavoriteProducts()
+        }
+    }
+
+    private fun setupSwipeToRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            productViewModel.getProducts()
         }
     }
 

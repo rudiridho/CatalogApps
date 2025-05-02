@@ -22,7 +22,8 @@ class ProductAdapter(private val onFavoriteClick: (ProductUI) -> Unit) :
         holder.bind(product)
     }
 
-    inner class ProductViewHolder(private val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ProductViewHolder(private val binding: ItemProductBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: ProductUI) {
             binding.tvProductName.text = product.name

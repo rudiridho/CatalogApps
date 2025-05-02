@@ -26,7 +26,7 @@ class ProductViewModel(
     private val productMapper: ProductMapper
 ) : ViewModel() {
 
-    private val _products = MutableLiveData<UiSafeState<List<ProductUI>>>(UiSafeState.Uninitialized)
+    private val _products = MutableLiveData<UiSafeState<List<ProductUI>>>(UiSafeState.Loading)
     val products: LiveData<UiSafeState<List<ProductUI>>> = _products
 
     private val _favoriteProducts = MutableLiveData<UiSafeState<List<ProductUI>>>()

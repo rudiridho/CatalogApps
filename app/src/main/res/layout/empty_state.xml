@@ -8,9 +8,10 @@
 
     <ImageView
         android:id="@+id/emptyImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/empty_box"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/empty_box"
         app:tint="@color/grey" />
 
     <TextView
